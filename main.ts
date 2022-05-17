@@ -24,12 +24,35 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
     pause(200)
     mySprite.setFlag(SpriteFlag.Ghost, false)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
+    info.changeScoreBy(1)
+    otherSprite.destroy()
+    pizza = sprites.create(img`
+        . . . . . . b b b b . . . . . . 
+        . . . . . . b 4 4 4 b . . . . . 
+        . . . . . . b b 4 4 4 b . . . . 
+        . . . . . b 4 b b b 4 4 b . . . 
+        . . . . b d 5 5 5 4 b 4 4 b . . 
+        . . . . b 3 2 3 5 5 4 e 4 4 b . 
+        . . . b d 2 2 2 5 7 5 4 e 4 4 e 
+        . . . b 5 3 2 3 5 5 5 5 e e e e 
+        . . b d 7 5 5 5 3 2 3 5 5 e e e 
+        . . b 5 5 5 5 5 2 2 2 5 5 d e e 
+        . b 3 2 3 5 7 5 3 2 3 5 d d e 4 
+        . b 2 2 2 5 5 5 5 5 5 d d e 4 . 
+        b d 3 2 d 5 5 5 d d d 4 4 . . . 
+        b 5 5 5 5 d d 4 4 4 4 . . . . . 
+        4 d d d 4 4 4 . . . . . . . . . 
+        4 4 4 4 . . . . . . . . . . . . 
+        `, SpriteKind.Food)
+    pizza.setPosition(randint(10, 150), randint(10, 110))
+})
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.destroy()
-    info.changeScoreBy(1)
 })
 let drone: Sprite = null
 let projectile: Sprite = null
+let pizza: Sprite = null
 let mySprite: Sprite = null
 scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
@@ -153,6 +176,8 @@ scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
+info.setLife(3)
+info.setScore(0)
 mySprite = sprites.create(img`
     ..ccc.........ffffff....
     ..f4cc.......fcc22ff....
@@ -173,20 +198,37 @@ mySprite = sprites.create(img`
     `, SpriteKind.Player)
 mySprite.setStayInScreen(true)
 controller.moveSprite(mySprite)
-info.setScore(0)
-info.setLife(3)
+pizza = sprites.create(img`
+    . . . . . . b b b b . . . . . . 
+    . . . . . . b 4 4 4 b . . . . . 
+    . . . . . . b b 4 4 4 b . . . . 
+    . . . . . b 4 b b b 4 4 b . . . 
+    . . . . b d 5 5 5 4 b 4 4 b . . 
+    . . . . b 3 2 3 5 5 4 e 4 4 b . 
+    . . . b d 2 2 2 5 7 5 4 e 4 4 e 
+    . . . b 5 3 2 3 5 5 5 5 e e e e 
+    . . b d 7 5 5 5 3 2 3 5 5 e e e 
+    . . b 5 5 5 5 5 2 2 2 5 5 d e e 
+    . b 3 2 3 5 7 5 3 2 3 5 d d e 4 
+    . b 2 2 2 5 5 5 5 5 5 d d e 4 . 
+    b d 3 2 d 5 5 5 d d d 4 4 . . . 
+    b 5 5 5 5 d d 4 4 4 4 . . . . . 
+    4 d d d 4 4 4 . . . . . . . . . 
+    4 4 4 4 . . . . . . . . . . . . 
+    `, SpriteKind.Food)
+pizza.setPosition(randint(10, 150), randint(10, 110))
 let MeteorVelocity = -50
 let MeteorDelay = 500
 game.onUpdate(function () {
-    if (info.score() >= 100) {
+    if (info.score() >= 75) {
         game.over(true)
     } else if (info.score() > 75) {
-        MeteorDelay = 25
+        MeteorDelay = 60
         MeteorVelocity = -125
-    } else if (info.score() > 50) {
+    } else if (info.score() > 40) {
         MeteorDelay = 100
         MeteorVelocity = -100
-    } else if (info.score() > 25) {
+    } else if (info.score() > 20) {
         MeteorDelay = 200
         MeteorVelocity = -75
     }
